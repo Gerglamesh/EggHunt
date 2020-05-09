@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float maxSpeed;
     public float rampUpSpeed;
+
+    [Header("Target Settings")]
     public Transform target;
 
     private Rigidbody2D rb2d;
