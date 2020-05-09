@@ -128,11 +128,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 2
+  rampUpSpeed: 0.5
   Invincible: 0
   MaxHealth: 10
   CurrentHealth: 0
+  DamageCoolDownDeltaT: 1
   Respawns: 2
-  rampUpSpeed: 0.5
 --- !u!50 &8881687428544959509
 Rigidbody2D:
   serializedVersion: 4

@@ -13,7 +13,7 @@ public class PlayerScript : MonoBehaviour
     public bool Invincible = false;
     public int MaxHealth;
     public int CurrentHealth;
-    public int DamageCoolDownSec; 
+    public float DamageCoolDownDeltaT; 
     public int Respawns;
 
     public const float indicatorLength = 0.5f;
@@ -26,10 +26,12 @@ public class PlayerScript : MonoBehaviour
     private Transform eggCarry;
     private EggScript carrying = null;
     private Vector2 velocity;
+    private float damageCountdown;
     
     private void Awake()
     {
         CurrentHealth = MaxHealth;
+        damageCountdown = DamageCoolDownDeltaT;
     }
 
     // Start is called before the first frame update
@@ -94,9 +96,22 @@ public class PlayerScript : MonoBehaviour
         }        
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D other)
     {
-        
+        if (other.gameObject.tag == "Enemy")
+        {
+            if (damageCountdown <= 0)
+            {
+                Debug.Log($"{this.name} bumped into {other.gameObject.name}!");
+
+                LoseHealth(1);
+                damageCountdown = DamageCoolDownDeltaT;
+            }
+            else
+            {
+                damageCountdown -= Time.deltaTime;
+            }
+        }        
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -111,17 +126,11 @@ public class PlayerScript : MonoBehaviour
                 Transfer(otherPlayer);
             }
         }
-        else if (other.gameObject.tag == "Enemy" && !Invincible)
-        {
-            Debug.Log($"{this.name} bumped into {other.gameObject.name}!");
-
-            LoseHealth(1);            
-        }
     }
 
     public void LoseHealth(int amount)
     {
-        this.CurrentHealth--;
+        if (!Invincible) this.CurrentHealth--;
 
         if (this.CurrentHealth <= 0)
         {
