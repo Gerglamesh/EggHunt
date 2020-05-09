@@ -5,15 +5,20 @@ using static UtilitiesScript;
 
 public class PlayerScript : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float maxSpeed;
-    public const float indicatorLength = 0.5f;
+    public float rampUpSpeed;
+
+    [Header("Health Settings")]
     public bool Invincible = false;
     public int MaxHealth;
     public int CurrentHealth;
+    public int DamageCoolDownSec; 
     public int Respawns;
-    public float rampUpSpeed;
 
+    public const float indicatorLength = 0.5f;
     public static int playerIds = 0;
+
     private int playerId;
     private bool IsDead;
     Rigidbody2D rb2d;
@@ -21,7 +26,7 @@ public class PlayerScript : MonoBehaviour
     private Transform eggCarry;
     private EggScript carrying = null;
     private Vector2 velocity;
-
+    
     private void Awake()
     {
         CurrentHealth = MaxHealth;
@@ -87,6 +92,11 @@ public class PlayerScript : MonoBehaviour
             EggScript egg = other.gameObject.GetComponent<EggScript>();
             PickUp(egg);
         }        
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        
     }
 
     void OnCollisionEnter2D(Collision2D other)
