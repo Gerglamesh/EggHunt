@@ -15,9 +15,12 @@ public class SpriteFlashScript : MonoBehaviour
 
     public IEnumerator FlashWhiteCoroutine(float duration, float interwall)
     {
+        Color color = Color.white;
+        color.a = 1;
+
         for (float i = duration; i >= 0; i -= interwall * 2)
         {
-            renderer.color = Color.white;
+            renderer.color = color;
             yield return new WaitForSeconds(interwall);
             renderer.color = origColor;
             yield return new WaitForSeconds(interwall);
