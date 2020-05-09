@@ -21,28 +21,33 @@ public class PlayerScript : MonoBehaviour
 
     private int playerId;
     private bool IsDead;
-    Rigidbody2D rb2d;
-    SpriteRenderer spriteRenderer;
+    private Rigidbody2D rb2d;
+    private SpriteRenderer spriteRenderer;
     private Transform eggCarry;
     private EggScript carrying = null;
+    private SpriteFlashScript spriteFlashScript;
     private Vector2 velocity;
     private float damageCountdown;
     
     private void Awake()
     {
+        playerId = playerIds++;
+
+        eggCarry = transform.GetChild(0).transform; // TODO: Is there a better way to get a specific child object?
+        rb2d = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = GetRandomColor();
+        spriteFlashScript = new SpriteFlashScript(spriteRenderer);
+
         CurrentHealth = MaxHealth;
         damageCountdown = DamageCoolDownDeltaT;
+              
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        playerId = playerIds++;
         
-        eggCarry = transform.GetChild(0).transform; // TODO: Is there a better way to get a specific child object?
-        rb2d = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.color = GetRandomColor();
     }
 
     // Update is called once per frame
@@ -62,6 +67,9 @@ public class PlayerScript : MonoBehaviour
             float aimHorizontalInput = Input.GetAxisRaw("AimHorizontal_" + playerId);
             float aimVerticalInput = Input.GetAxisRaw("AimVertical_" + playerId);
             aimInput = new Vector2(aimHorizontalInput, aimVerticalInput).normalized;
+
+            // Damageable
+            damageCountdown -= Time.deltaTime;
         }
 
         Vector2.SmoothDamp(Vector2.zero, moveVector, ref velocity, rampUpSpeed, 1.0f);
@@ -107,10 +115,6 @@ public class PlayerScript : MonoBehaviour
                 LoseHealth(1);
                 damageCountdown = DamageCoolDownDeltaT;
             }
-            else
-            {
-                damageCountdown -= Time.deltaTime;
-            }
         }        
     }
 
@@ -130,7 +134,11 @@ public class PlayerScript : MonoBehaviour
 
     public void LoseHealth(int amount)
     {
-        if (!Invincible) this.CurrentHealth--;
+        if (!Invincible && !IsDead)
+        {
+            StartCoroutine(spriteFlashScript.FlashWhiteCoroutine(DamageCoolDownDeltaT / 2, 0.05f));
+            this.CurrentHealth--;   
+        }
 
         if (this.CurrentHealth <= 0)
         {
