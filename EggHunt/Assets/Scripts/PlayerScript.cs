@@ -98,7 +98,8 @@ public class PlayerScript : MonoBehaviour
     {
         if (other.gameObject.tag == "Egg")
         {
-            Debug.Log(this.name + " bumped into " + other.gameObject.name);
+            Debug.Log($"{this.name} bumped into {other.gameObject.name}");
+
             EggScript egg = other.gameObject.GetComponent<EggScript>();
             PickUp(egg);
         }        
@@ -110,7 +111,7 @@ public class PlayerScript : MonoBehaviour
         {
             if (damageCountdown <= 0)
             {
-                Debug.Log($"{this.name} bumped into {other.gameObject.name}!");
+                Debug.Log($"{this.name}'s and {other.gameObject.name}'s colliders are inside eachother");
 
                 LoseHealth(1);
                 damageCountdown = DamageCoolDownDeltaT;
@@ -122,11 +123,11 @@ public class PlayerScript : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log(this.name + " bumped into " + other.gameObject.name);
+            Debug.Log($"{this.name} bumped into {other.gameObject.name}");
             PlayerScript otherPlayer = other.gameObject.GetComponent<PlayerScript>();
             if (carrying && carrying.IsReadyForTransfer())
             {
-                Debug.Log(this.name + " transferred " + carrying.name + " to " + other.gameObject.name);
+                Debug.Log($"{this.name} transferred {carrying.name} to {other.gameObject.name}");
                 Transfer(otherPlayer);
             }
         }
@@ -144,7 +145,7 @@ public class PlayerScript : MonoBehaviour
         {
             if (carrying != null)
             {
-                Debug.Log(this.name + " dropped " + carrying.name + "on the ground");
+                Debug.Log($"{this.name} dropped {carrying.name} on the ground");
                 Drop();
             }
 
