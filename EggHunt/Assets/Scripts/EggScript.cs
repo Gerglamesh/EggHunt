@@ -61,7 +61,7 @@ public class EggScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag != "Player")
+        if (other.gameObject.tag != "Player" && other.gameObject.tag != "Enemy")
         {
             Debug.Log($"{this.name} crashed against {other.gameObject.name}!");
 
